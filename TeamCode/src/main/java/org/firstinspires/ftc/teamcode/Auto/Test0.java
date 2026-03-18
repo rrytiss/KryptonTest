@@ -57,7 +57,7 @@ public class Test0 extends OpMode {
         Y_Pradinis = pos.getY(DistanceUnit.CM);
         Z_Pradinis = pos.getHeading(AngleUnit.RADIANS);
         // Tikslų nustatymas
-        X_Tikslas = 0;
+        X_Tikslas = 20;
         Y_Tikslas = 0;
         Z_Tikslas = 0;
         // Atstumo nustatymas
@@ -100,10 +100,10 @@ public class Test0 extends OpMode {
         }
 ///===============================
 
-        kP.setPower(Galia_kP * 0);
-        kG.setPower(Galia_kG * 0);
-        dP.setPower(Galia_dP * 0);
-        dG.setPower(Galia_dG * 0);
+        kP.setPower(Galia_kP);
+        kG.setPower(Galia_kG);
+        dP.setPower(Galia_dP);
+        dG.setPower(Galia_dG);
 
         odo.update();
         /// Atsarginis sustabdymas (Emergency stop)
@@ -113,7 +113,7 @@ public class Test0 extends OpMode {
             Galia_dG = 0;
             Galia_dP = 0;
         }
-        if(Xe == 0 && Ze == 0 && Ye == 0) {
+        if(Xe < 1 && Ze <1  && Ye < 1 && Xe > -1 && Ye > -1 && Ze > -1) {
             Galia_kP = 0;
             Galia_kG = 0;
             Galia_dG = 0;
