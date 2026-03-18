@@ -15,7 +15,7 @@ public class Test0 extends OpMode {
 
     GoBildaPinpointDriver odo;
     DcMotor kP, dG, dP, kG;
-    double Galia[];/// Variklių galios
+    double Galia_kP, Galia_dP, Galia_kG, Galia_dG;/// Variklių galios
     Pose2D pos;
     double X_Pradinis, Y_Pradinis, Z_Pradinis;///X = pradinis x; Y = pradinis y (strafe); Z = pradinis kampas
     double X_Tikslas, Y_Tikslas, Z_Tikslas;///Taikinio X, Y, Z (target error)
@@ -42,7 +42,11 @@ public class Test0 extends OpMode {
         Pose2D startPos = new Pose2D(DistanceUnit.MM, -8, -9, AngleUnit.RADIANS, 0);
         odo.setPosition(startPos);
 
-        odo.resetPosAndIMU();
+        pos = odo.getPosition();
+        telemetry.addData("X: ", pos.getX(DistanceUnit.CM));
+        telemetry.addData("Y: ", pos.getY(DistanceUnit.CM));
+        telemetry.addData("Kampas: ", pos.getHeading(AngleUnit.RADIANS));
+
     }
 
     @Override
@@ -61,53 +65,59 @@ public class Test0 extends OpMode {
         Ye = Y_Tikslas - Y_Pradinis;
         Ze = Z_Tikslas - Z_Pradinis;
 
-        Galia[1] = Xe - Ye - Ze;///Kairio priekinio galia
-        Galia[2] = Xe + Ye - Ze;///Kairio galinio galia,
-        Galia[3] = Xe + Ye + Ze;///Dešinio priekinio galia
-        Galia[4] = Xe - Ye + Ze;///Dešinio galino galia
+        Galia_kP = Xe - Ye - Ze;///Kairio priekinio galia
+        Galia_kG = Xe + Ye - Ze;///Kairio galinio galia,
+        Galia_dP = Xe + Ye + Ze;///Dešinio priekinio galia
+        Galia_dG = Xe - Ye + Ze;///Dešinio galino galia
 
     // Galios normalizavimas
-        if (Galia[1] > max){
-            Galia[1] = max;
+        if (Galia_kP > max){
+            Galia_kP = max;
         }
         else {
-            Galia[1] = -max;
+            Galia_kP = -max;
         }
 ///================================
-        if (Galia[2] > max){
-            Galia[2] = max;
+        if (Galia_kG> max){
+            Galia_kG = max;
         }
         else {
-            Galia[2] = -max;
+            Galia_kG = -max;
         }
 ///===============================
-        if (Galia[3] > max){
-            Galia[3] = max;
+        if (Galia_dP > max){
+            Galia_dP = max;
         }
         else {
-            Galia[3] = -max;
+            Galia_dP = -max;
         }
 ///===============================
-        if (Galia[4] > max){
-            Galia[4] = max;
+        if (Galia_dG > max){
+            Galia_dG = max;
         }
         else {
-            Galia[4] = -max;
+            Galia_dG = -max;
         }
 ///===============================
 
-        kP.setPower(Galia[1]);
-        kG.setPower(Galia[2]);
-        dP.setPower(Galia[3]);
-        dG.setPower(Galia[4]);
+        kP.setPower(Galia_kP * 0);
+        kG.setPower(Galia_kG * 0);
+        dP.setPower(Galia_dP * 0);
+        dG.setPower(Galia_dG * 0);
 
         odo.update();
         /// Atsarginis sustabdymas (Emergency stop)
         if (gamepad1.cross){
-            Galia[1] = 0;
-            Galia[2] = 0;
-            Galia[3] = 0;
-            Galia[4] = 0;
+            Galia_kP = 0;
+            Galia_kG = 0;
+            Galia_dG = 0;
+            Galia_dP = 0;
+        }
+        if(Xe == 0 && Ze == 0 && Ye == 0) {
+            Galia_kP = 0;
+            Galia_kG = 0;
+            Galia_dG = 0;
+            Galia_dP = 0;
         }
 
 
